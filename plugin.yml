@@ -1,0 +1,20 @@
+name: BuxFriends
+main: us.frin.buxfriends.BuxFriends
+version: 1.0
+
+commands:
+  f:
+    description: BuxFriends Usage
+    usage: /friends
+    permission: buxfriends.list
+    permission-message: You don't have permission to use a Friends!
+  friend:
+    description: BuxFriends Usage
+    usage: /friends
+    permission: buxfriends.list
+    permission-message: You don't have permission to use a Friends!
+  friends:
+    description: BuxFriends Usage
+    usage: /friends
+    permission: buxfriends.list
+    permission-message: You don't have permission to use a Friends!
