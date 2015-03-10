@@ -171,13 +171,13 @@ public class FriendCommands {
 		PreparedStatement stmt = null;
 		ResultSet res = null;
 
+		int status = -1;
+		
 		try {
 			stmt = this.plugin.con.prepareStatement("SELECT * FROM `friends` WHERE owner_uuid = ? AND friend_uuid = ?");
 			stmt.setString(1, player.getUniqueId().toString());
 			stmt.setString(2, uuid);
 			res = stmt.executeQuery();
-			
-			int status = -1;
 			
 			if (res.first()) {
 				int confirmed = res.getInt("confirmed");
@@ -188,7 +188,66 @@ public class FriendCommands {
 				status = 0;
 			}
 			if (stmt != null) stmt.close();
-			return status;
+			
+			if (status == 0) {
+				// Do additional check to see if the other way request already exists so we don't have pending requests in both ways
+				if (res != null) {
+					try {
+						res.close();
+					}
+					catch (SQLException e) {
+						// Nothing
+					}
+					res = null;
+				}
+				stmt = this.plugin.con.prepareStatement("SELECT * FROM `friends` WHERE owner_uuid = ? AND friend_uuid = ?");
+				stmt.setString(1, uuid);
+				stmt.setString(2, player.getUniqueId().toString());
+				res = stmt.executeQuery();
+				
+				if (res.first()) {
+					int confirmed = res.getInt("confirmed");
+					if (stmt != null) stmt.close();
+					if (confirmed == 0) status = 4;
+					else {
+						String modName = friend;
+						
+						if (friendPlayer == null) {
+							// Either offline player, or never seen before player
+							PlayerRecord pr = this.findPlayerByName(friend);
+							if (pr != null && pr.uuid != null) {
+								uuid = pr.uuid;
+							}
+							if (uuid != null) {
+								// Player was on this server before, name is cached
+								modName = pr.name;
+							}
+							else {
+								// Player cannot be found/never seen before
+								// Won't happen as it is filtered before
+								return -1;
+							}
+						}
+						else {
+							uuid = friendPlayer.getUniqueId().toString();
+							modName = friendPlayer.getName();
+						}
+
+						stmt = this.plugin.con.prepareStatement("INSERT INTO `friends` (`owner_uuid`, `owner_name`, `friend_uuid`, `friend_name`, `confirmed`, `created_at`, `updated_at`) VALUES (?, ?, ?, ?, 1, NOW(), NOW())");
+						stmt.setString(1, player.getUniqueId().toString());
+						stmt.setString(2, player.getName());
+						stmt.setString(3, uuid);
+						stmt.setString(4, modName);
+						stmt.executeUpdate();
+						if (stmt != null) stmt.close();
+						player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+modName+" was added to your friend list");
+						status = 3;
+					}
+				}
+				else {
+					if (stmt != null) stmt.close();
+				}
+			}
 		}
 		catch (SQLException e) {
 			System.out.println("SQLException: " + e.getMessage());
@@ -216,7 +275,7 @@ public class FriendCommands {
 				stmt = null;
 			}
 		}
-		return -1;
+		return status;
 	}
 
 	// Return true if player has unconfirmed requests
@@ -336,7 +395,7 @@ public class FriendCommands {
 		ArrayList<FriendRecord> list = new ArrayList<FriendRecord>(5);
 
 		try {
-			stmt = this.plugin.con.prepareStatement("SELECT * FROM `friends` WHERE friend_uuid = ? AND confirmed = 1");
+			stmt = this.plugin.con.prepareStatement("SELECT * FROM `friends` WHERE friend_uuid = ? AND confirmed = 1 GROUP BY owner_uuid");
 			stmt.setString(1, player.getUniqueId().toString());
 			res = stmt.executeQuery();
 			

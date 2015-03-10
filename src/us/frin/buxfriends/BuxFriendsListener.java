@@ -98,7 +98,9 @@ public class BuxFriendsListener implements Listener {
 			player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+" You have "+hasUnconfirmedRequests+" friend request(s) pending. See them with /friends requests");
 		}
 		
-		cmds.notifyUsersAbout(player, true);
+		if (!player.hasPermission("buxfriends.admin")) {
+			cmds.notifyUsersAbout(player, true);
+		}
 	}
 	
 	@EventHandler // EventPriority.NORMAL by default
@@ -106,6 +108,8 @@ public class BuxFriendsListener implements Listener {
 		Player player = evt.getPlayer(); // The player who quit
 		FriendCommands cmds = new FriendCommands(this.plugin);
 		
-		cmds.notifyUsersAbout(player, false);
+		if (!player.hasPermission("buxfriends.admin")) {
+			cmds.notifyUsersAbout(player, false);
+		}
 	}
 }

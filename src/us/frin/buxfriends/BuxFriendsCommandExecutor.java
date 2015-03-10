@@ -104,6 +104,18 @@ public class BuxFriendsCommandExecutor implements CommandExecutor {
 						player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.RED+args[1]+" was never seen before.");
 						return true;
 					}
+					else if (addedStatus == 3) {
+						// Already confirmed other side
+						
+//						player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.RED+args[1]+" is already on your friend list.");
+						return true;
+					}
+					else if (addedStatus == 4) {
+						// Not yet confirmed from other side request
+						
+						player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.RED+"You already have a pending request from "+args[1]+", see "+ChatColor.RED+"/friends requests");
+						return true;
+					}
 				}
 				
 				return true;
