@@ -29,7 +29,7 @@ public class FriendCommands {
 		ResultSet res = null;
 		StringBuilder sb = new StringBuilder(50);
 		try {
-			stmt = this.plugin.con.prepareStatement("SELECT * FROM `friends` WHERE owner_uuid = ?");
+			stmt = this.plugin.con.prepareStatement("SELECT * FROM `friends` WHERE owner_uuid = ? GROUP BY owner_uuid, friend_uuid ORDER BY friend_name");
 			stmt.setString(1, player.getUniqueId().toString());
 			res = stmt.executeQuery();
 			

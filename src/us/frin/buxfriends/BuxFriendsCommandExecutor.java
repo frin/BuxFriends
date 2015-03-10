@@ -108,7 +108,7 @@ public class BuxFriendsCommandExecutor implements CommandExecutor {
 				
 				return true;
 			}
-			else if (args[0].equalsIgnoreCase("requests")) {
+			else if (args[0].equalsIgnoreCase("requests") || args[0].equalsIgnoreCase("req")) {
 				//////////////////////////////////
 				// Friends requests list command
 				//////////////////////////////////
@@ -258,10 +258,12 @@ public class BuxFriendsCommandExecutor implements CommandExecutor {
 					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"The Buxville Friends Plugin");
 					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"/friends add <name>: Add friend request");
 					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"/friends confirm <name>: Confirm friend request");
+					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"/friends deny <name>: Deny friend request");
 					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"/friends requests: List friend requests");
 					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"/friends remove <name>: Remove player from friend list");
 					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"/friends help: this help page");
 					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"/friends: shows list of friends with their online status ("+ChatColor.GREEN+"online, "+ChatColor.RED+"offline, "+ChatColor.GRAY+"unconfirmed"+ChatColor.WHITE+")");
+					player.sendMessage(ChatColor.DARK_PURPLE + "[BuxFriends] "+ChatColor.WHITE+"All features can be used with /f, /friend or /friends commands");
 //					this.plugin.getLogger().info("[BuxFriends] "+player.getName()+" ran /friends help command");
 				}
 				
